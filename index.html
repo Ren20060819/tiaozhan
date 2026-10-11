@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四道关｜河西走廊生态恢复还面临什么</title>
+<style>
+  :root {
+    --bg: #f2f5f3; --text: #12302f; --muted: #546866; --line: #cfd9d6; --focus: #1f78b4;
+    --ink: #1b3a39; --water: #1f78b4; --leaf: #3f9a52; --leaf2: #9cc99a; --sand: #d8c9a6;
+    --ochre: #bf812d; --rock: #5f7279; --snow: #ffffff;
+    --t1: #dfecf4; --t2: #ece6d3; --t3: #dcebe8; --t4: #e1e6e8;
+    box-sizing: border-box;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c1a1c; --text: #e4eeec; --muted: #9ab0ad; --line: #243839; --focus: #6fb4e0;
+      --ink: #cfe0dd; --water: #4aa3df; --leaf: #5bb36e; --leaf2: #2f6b45; --sand: #6b6044;
+      --ochre: #c99a4b; --rock: #46585e; --snow: #e9f2f5;
+      --t1: #10303f; --t2: #2b2819; --t3: #0f2f2d; --t4: #1a2629;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c1a1c; --text: #e4eeec; --muted: #9ab0ad; --line: #243839; --focus: #6fb4e0;
+    --ink: #cfe0dd; --water: #4aa3df; --leaf: #5bb36e; --leaf2: #2f6b45; --sand: #6b6044;
+    --ochre: #c99a4b; --rock: #46585e; --snow: #e9f2f5;
+    --t1: #10303f; --t2: #2b2819; --t3: #0f2f2d; --t4: #1a2629;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .gates { list-style: none; margin: 0 auto; padding: 0; max-width: 760px; }
+  .gate { border-top: 1px solid var(--line); }
+  .gate:last-child { border-bottom: 1px solid var(--line); }
+
+  /* —— 每一关是一条"画幅"：右侧是插画，左侧留给标题 —— */
+  .gate button {
+    all: unset; box-sizing: border-box; display: block; position: relative; overflow: hidden;
+    width: 100%; height: 124px; cursor: pointer;
+  }
+  .gate button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+  .art { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .fade { position: absolute; inset: 0; pointer-events: none;
+          background: linear-gradient(90deg, var(--bg) 0%, var(--bg) 30%, transparent 60%); }
+  .head { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); max-width: 40%; }
+  .tag { display: block; font-size: 12px; color: var(--muted); letter-spacing: .12em; margin-bottom: 4px; }
+  .title { display: block; font-family: "Kaiti SC", "STKaiti", "KaiTi", "楷体", "AR PL UKai CN", serif;
+           font-size: 27px; line-height: 1.25; font-weight: 400; color: var(--text); }
+  .sub { display: block; font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.55; }
+
+  .mark { position: absolute; right: 12px; top: 12px; width: 28px; height: 28px; border-radius: 50%;
+          background: var(--bg); border: 1px solid var(--line); opacity: .92; }
+  .mark::before, .mark::after { content: ""; position: absolute; left: 50%; top: 50%;
+          width: 12px; height: 1.5px; margin: -.75px 0 0 -6px; background: var(--text); transition: transform .25s ease; }
+  .mark::after { transform: rotate(90deg); }
+  .gate.open .mark::after { transform: rotate(0deg); }
+
+  .panel { display: grid; grid-template-rows: 0fr; visibility: hidden;
+           transition: grid-template-rows .35s ease, visibility 0s .35s; }
+  .gate.open .panel { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows .35s ease; }
+  .panel > div { overflow: hidden; }
+  .panel p { margin: 0; padding: 20px 26px 26px 22px; font-size: 15.5px; line-height: 1.95; text-align: justify; }
+
+  /* —— 插画的颜色 —— */
+  .tint1 { fill: var(--t1); } .tint2 { fill: var(--t2); } .tint3 { fill: var(--t3); } .tint4 { fill: var(--t4); }
+  .stroke-ink { fill: none; stroke: var(--ink); }
+  .contour { fill: none; stroke: var(--ink); stroke-width: 1; opacity: .13; }
+  .f-water { fill: var(--water); } .f-leaf { fill: var(--leaf); } .f-leaf2 { fill: var(--leaf2); }
+  .f-sand { fill: var(--sand); } .f-ochre { fill: var(--ochre); } .f-rock { fill: var(--rock); } .f-snow { fill: var(--snow); }
+  .f-ink { fill: var(--ink); }
+  .lbl-strong { fill: var(--text); }
+  .lbl { font-size: 11px; fill: var(--muted); font-family: inherit; letter-spacing: .06em; }
+
+  /* —— 动效：只在点开时发生，回应读者的动作 —— */
+  .water { transform: translateY(36px); transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
+  .gate.open .water { transform: translateY(0); }
+  .arm { stroke: var(--ink); stroke-width: 1.4; opacity: .75; }
+  .gate.open .arm { animation: spin 2.4s cubic-bezier(.4,0,.2,1) 1 both; }
+  .gate.open .pv2 .arm { animation-delay: .25s; } .gate.open .pv3 .arm { animation-delay: .5s; } .gate.open .pv4 .arm { animation-delay: .75s; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .run { fill: none; stroke: var(--water); stroke-linecap: round; }
+  .gate.open .run { stroke-dasharray: 1; animation: draw 1.8s ease-out 1 both; }
+  .gate.open .run.r2 { animation-delay: .15s; } .gate.open .run.r3 { animation-delay: .3s; } .gate.open .run.r4 { animation-delay: .45s; }
+  @keyframes draw { from { stroke-dasharray: 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1; stroke-dashoffset: 0; } }
+  .beam { stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 3 4; fill: none; opacity: .45; transition: opacity .4s; }
+  .gate.open .beam { opacity: .95; animation: march 1.2s linear 3; }
+  @keyframes march { to { stroke-dashoffset: -21; } }
+  .seen { fill: none; stroke: var(--leaf); stroke-width: 3.2; stroke-linecap: round; opacity: .35; transition: opacity .4s; }
+  .gate.open .seen { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .water, .mark::before, .mark::after, .panel, .beam, .seen { transition: none !important; }
+    .gate.open .arm, .gate.open .run, .gate.open .beam { animation: none !important; }
+  }
+  @media (max-width: 520px) {
+    /* 窄屏：标题在上，插画在下，避免互相遮挡 */
+    .gate button { height: 206px; }
+    .art { top: auto; left: auto; right: 0; bottom: 0; width: 670px; height: 109px; }
+    .fade { display: none; }
+    .head { top: 16px; left: 16px; transform: none; max-width: calc(100% - 64px); }
+    .title { font-size: 24px; }
+    .panel p { font-size: 15px; padding: 18px 18px 24px 16px; }
+  }
+</style>
+</head>
+<body>
+<ul class="gates" id="gates">
+
+  <!-- 第一关：水的上限 —— 一只盆地盛水，水位被一条虚线封顶 -->
+  <li class="gate">
+    <button type="button" aria-expanded="false" aria-controls="p1" id="b1">
+      <svg class="art" viewBox="0 0 760 124" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" focusable="false">
+        <defs><clipPath id="bowl"><path d="M352 14 C352 88 396 114 530 114 C664 114 708 88 708 14 Z"/></clipPath></defs>
+        <rect class="tint1" width="760" height="124"/>
+        <path class="contour" d="M300 104 C380 76 460 96 540 66 S690 74 760 44"/>
+        <path class="contour" d="M300 116 C390 90 470 108 550 80 S700 88 760 60"/>
+        <path class="contour" d="M300 92 C370 62 450 84 530 52 S690 60 760 28"/>
+        <g clip-path="url(#bowl)"><g class="water">
+          <path class="f-water" opacity=".28" d="M340 50 q22 -8 44 0 t44 0 t44 0 t44 0 t44 0 t44 0 t44 0 t44 0 t44 0 t44 0 V160 H340 Z"/>
+          <path class="f-water" opacity=".8" d="M340 46 q22 -7 44 0 t44 0 t44 0 t44 0 t44 0 t44 0 t44 0 t44 0 t44 0 t44 0 V160 H340 Z"/>
+        </g></g>
+        <path class="stroke-ink" stroke-width="1.8" d="M352 14 C352 88 396 114 530 114 C664 114 708 88 708 14"/>
+        <line class="stroke-ink" stroke-width="1.2" stroke-dasharray="5 4" x1="330" x2="706" y1="30" y2="30"/>
+        <text class="lbl" x="704" y="24" text-anchor="end">上限</text>
+        <g class="stroke-ink" stroke-width="1" opacity=".55">
+          <line x1="744" y1="46" x2="744" y2="114"/>
+          <line x1="738" y1="46" x2="750" y2="46"/><line x1="741" y1="66" x2="747" y2="66"/><line x1="738" y1="86" x2="750" y2="86"/>
+          <line x1="741" y1="106" x2="747" y2="106"/><line x1="738" y1="114" x2="750" y2="114"/>
+        </g>
+      </svg>
+      <span class="fade"></span>
+      <span class="head"><span class="tag">第一关</span><span class="title">水的上限</span><span class="sub">河西走廊的绿，最终被水的总量封顶</span></span>
+      <span class="mark" aria-hidden="true"></span>
+    </button>
+    <div class="panel" id="p1" role="region" aria-labelledby="b1"><div>
+      <p>河西走廊的绿，最终被水的总量封顶。内陆河的来水有限，地下水的亏空也要很长时间才能补回。“以水定绿”的意思是：绿多大、种什么、种在哪里，都要先算水账。再多的工程，也不能让一条河流出比它实际更多的水。</p>
+    </div></div>
+  </li>
+
+  <!-- 第二关：农田的绿 —— 俯瞰：渠、圆形喷灌田、方块农田，边缘是荒漠 -->
+  <li class="gate">
+    <button type="button" aria-expanded="false" aria-controls="p2" id="b2">
+      <svg class="art" viewBox="0 0 760 124" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" focusable="false">
+        <rect class="tint2" width="760" height="124"/>
+        <g class="f-sand" opacity=".7">
+          <circle cx="716" cy="60" r="1.6"/><circle cx="730" cy="48" r="1.4"/><circle cx="744" cy="66" r="1.6"/><circle cx="738" cy="84" r="1.3"/>
+          <circle cx="724" cy="100" r="1.5"/><circle cx="748" cy="30" r="1.4"/><circle cx="706" cy="26" r="1.2"/><circle cx="712" cy="114" r="1.4"/>
+        </g>
+        <path class="stroke-ink" stroke="var(--water)" stroke-width="3.6" stroke-linecap="round" d="M300 62 C380 55 420 69 500 62 S640 56 700 63"/>
+        <g transform="translate(372 32)"><circle class="f-leaf" r="24"/><circle class="f-leaf2" r="15" opacity=".6"/><g class="pv1"><line class="arm" x1="0" y1="0" x2="24" y2="0"/></g></g>
+        <g transform="translate(424 32)"><circle class="f-leaf2" r="24"/><circle class="f-leaf" r="15" opacity=".55"/><g class="pv2"><line class="arm" x1="0" y1="0" x2="24" y2="0"/></g></g>
+        <g transform="translate(476 32)"><circle class="f-leaf" r="24"/><circle class="f-leaf2" r="15" opacity=".6"/><g class="pv3"><line class="arm" x1="0" y1="0" x2="24" y2="0"/></g></g>
+        <g transform="translate(528 32)"><circle class="f-leaf2" r="24"/><circle class="f-leaf" r="15" opacity=".55"/><g class="pv4"><line class="arm" x1="0" y1="0" x2="24" y2="0"/></g></g>
+        <g transform="translate(398 94)"><circle class="f-leaf2" r="24"/><circle class="f-leaf" r="15" opacity=".55"/><g class="pv3"><line class="arm" x1="0" y1="0" x2="24" y2="0"/></g></g>
+        <g transform="translate(450 94)"><circle class="f-leaf" r="24"/><circle class="f-leaf2" r="15" opacity=".6"/><g class="pv4"><line class="arm" x1="0" y1="0" x2="24" y2="0"/></g></g>
+        <g transform="translate(502 94)"><circle class="f-leaf2" r="24"/><circle class="f-leaf" r="15" opacity=".55"/><g class="pv1"><line class="arm" x1="0" y1="0" x2="24" y2="0"/></g></g>
+        <g transform="translate(554 94)"><circle class="f-leaf" r="24"/><circle class="f-leaf2" r="15" opacity=".6"/><g class="pv2"><line class="arm" x1="0" y1="0" x2="24" y2="0"/></g></g>
+        <rect class="f-leaf" x="590" y="10" width="40" height="42" opacity=".9"/><rect class="f-leaf2" x="636" y="10" width="40" height="42"/>
+        <rect class="f-ochre" x="590" y="72" width="40" height="42" opacity=".55"/><rect class="f-leaf" x="636" y="72" width="40" height="42" opacity=".75"/>
+        <g class="stroke-ink" stroke-width=".8" opacity=".35"><line x1="598" y1="10" x2="598" y2="52"/><line x1="606" y1="10" x2="606" y2="52"/><line x1="614" y1="10" x2="614" y2="52"/><line x1="622" y1="10" x2="622" y2="52"/></g>
+      </svg>
+      <span class="fade"></span>
+      <span class="head"><span class="tag">第二关</span><span class="title">农田的绿</span><span class="sub">变绿最快的，也是用水最多的</span></span>
+      <span class="mark" aria-hidden="true"></span>
+    </button>
+    <div class="panel" id="p2" role="region" aria-labelledby="b2"><div>
+      <p>我们的数据显示，耕地是走廊里变绿最快的部分，而灌溉农田又是用水大户。粮食安全和农民收入离不开农田，生态恢复却需要把水留给天然植被和尾闾。两者如何在同一条河上取得平衡，是治理中最现实、也最难的取舍。</p>
+    </div></div>
+  </li>
+
+  <!-- 第三关：来水的不确定 —— 雪山，山下几条年年不同的径流 -->
+  <li class="gate">
+    <button type="button" aria-expanded="false" aria-controls="p3" id="b3">
+      <svg class="art" viewBox="0 0 760 124" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" focusable="false">
+        <rect class="tint3" width="760" height="124"/>
+        <path class="f-rock" opacity=".85" d="M320 124 L320 110 L372 52 L404 74 L452 20 L500 70 L540 46 L590 104 L590 124 Z"/>
+        <path class="f-rock" opacity=".45" d="M470 124 L520 74 L556 96 L600 60 L650 100 L690 124 Z"/>
+        <path class="f-snow" d="M452 20 L437 40 L446 35 L453 44 L461 34 L469 40 Z"/>
+        <path class="f-snow" d="M372 52 L361 66 L369 62 L374 69 L381 61 Z"/>
+        <path class="f-snow" d="M540 46 L531 58 L537 55 L541 61 L547 55 Z"/>
+        <path class="run r1" pathLength="1" stroke-width="2.6" d="M572 96 C620 78 660 108 706 86 S750 72 760 74"/>
+        <path class="run r2" pathLength="1" stroke-width="2" opacity=".7" d="M572 99 C624 92 664 114 708 100 S752 96 760 98"/>
+        <path class="run r3" pathLength="1" stroke-width="1.5" opacity=".5" d="M572 102 C630 108 658 86 712 108 S752 112 760 112"/>
+        <path class="run r4" pathLength="1" stroke-width="1.3" opacity=".38" d="M572 94 C610 66 664 82 708 62 S750 56 760 52"/>
+        <text class="lbl" x="708" y="30" text-anchor="end">年际波动</text>
+      </svg>
+      <span class="fade"></span>
+      <span class="head"><span class="tag">第三关</span><span class="title">来水的不确定</span><span class="sub">山上的水，未必年年一样</span></span>
+      <span class="mark" aria-hidden="true"></span>
+    </button>
+    <div class="panel" id="p3" role="region" aria-labelledby="b3"><div>
+      <p>走廊的水来自祁连山，山上的冰川和积雪融水，决定了河流的底盘。在气候变化的背景下，上游来水在年际乃至更长的时间尺度上都可能波动，今天依据过去水量制定的分配方案，未来未必依然合适。</p>
+    </div></div>
+  </li>
+
+  <!-- 第四关：衡量的标准 —— 卫星只看得见地表，地下水、土壤、物种在下面 -->
+  <li class="gate">
+    <button type="button" aria-expanded="false" aria-controls="p4" id="b4">
+      <svg class="art" viewBox="0 0 760 124" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" focusable="false">
+        <defs><clipPath id="ground"><path d="M232 54 C270 50 300 56 330 52 C380 46 420 58 470 52 S570 46 620 54 S700 58 760 50 V124 H232 Z"/></clipPath></defs>
+        <rect class="tint4" width="760" height="124"/>
+        <g clip-path="url(#ground)">
+          <rect class="f-ochre" x="232" y="40" width="528" height="34" opacity=".5"/>
+          <rect class="f-water" x="232" y="74" width="528" height="22" opacity=".35"/>
+          <rect class="f-rock" x="232" y="96" width="528" height="30" opacity=".55"/>
+          <path class="stroke-ink" stroke="var(--water)" stroke-width="1.2" opacity=".8" d="M232 86 q20 -5 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0"/>
+          <g class="f-leaf"><circle cx="404" cy="62" r="2.6"/><circle cx="472" cy="66" r="2.4"/><circle cx="552" cy="60" r="2.6"/><circle cx="640" cy="65" r="2.4"/><circle cx="702" cy="61" r="2.6"/></g>
+        </g>
+        <path class="stroke-ink" stroke-width="1.6" d="M232 54 C270 50 300 56 330 52 C380 46 420 58 470 52 S570 46 620 54 S700 58 760 50"/>
+        <path class="seen" d="M556 51 C580 47 600 52 620 54 S680 56 724 53"/>
+        <line class="beam" x1="640" y1="30" x2="556" y2="50"/><line class="beam" x1="640" y1="30" x2="724" y2="52"/>
+        <g transform="translate(640 20) rotate(-18)">
+          <rect class="f-ink" x="-5" y="-4" width="10" height="8" rx="1.5"/>
+          <rect class="f-water" x="-19" y="-3" width="12" height="6"/><rect class="f-water" x="7" y="-3" width="12" height="6"/>
+        </g>
+        <text class="lbl" x="344" y="36">卫星看得见</text>
+        <text class="lbl lbl-strong" x="344" y="116">地下水 · 土壤 · 物种</text>
+      </svg>
+      <span class="fade"></span>
+      <span class="head"><span class="tag">第四关</span><span class="title">衡量的标准</span><span class="sub">卫星看得见的，不是全部</span></span>
+      <span class="mark" aria-hidden="true"></span>
+    </button>
+    <div class="panel" id="p4" role="region" aria-labelledby="b4"><div>
+      <p>我们看到的，主要是卫星看得见的东西：植被指数和水面。真正的生态恢复，还包括地下水位、土壤、物种和群落结构，这些需要地面监测和长期观测。只用“绿了多少”衡量成效，容易高估成果，也容易忽略代价。</p>
+    </div></div>
+  </li>
+
+</ul>
+
+<script>
+(function () {
+  // 主题：默认跟随系统；嵌入时可用 ?theme=dark 或 ?theme=light 强制指定；?open=1..4 默认展开某一关
+  var params = new URLSearchParams(location.search);
+  var theme = params.get('theme');
+  if (theme === 'dark' || theme === 'light') document.documentElement.setAttribute('data-theme', theme);
+
+  var gates = Array.prototype.slice.call(document.querySelectorAll('.gate'));
+  function setOpen(g, open) {
+    g.classList.toggle('open', open);
+    g.querySelector('button').setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  gates.forEach(function (g) {
+    g.querySelector('button').addEventListener('click', function () {
+      var willOpen = !g.classList.contains('open');
+      gates.forEach(function (o) { setOpen(o, o === g ? willOpen : false); });
+    });
+  });
+  var n = parseInt(params.get('open'), 10);
+  if (n >= 1 && n <= gates.length) setOpen(gates[n - 1], true);
+})();
+</script>
+</body>
+</html>
